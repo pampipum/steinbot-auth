@@ -43,11 +43,7 @@
 					href="/"
 					class:active={'/' === currentPage}>Home</a
 				>
-				<a
-					class="flex items-center text-sm font-medium text-muted-foreground"
-					href="/dashboard"
-					class:active={'/dashboard' === currentPage}>Protected</a
-				>
+				<Button href="/app">App</Button>
 			</nav>
 		</div>
 		<div class="flex flex-1 items-center justify-end space-x-4">
