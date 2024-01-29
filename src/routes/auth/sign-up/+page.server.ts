@@ -15,7 +15,7 @@ const signUpSchema = userSchema.pick({
 
 export const load = async (event) => {
 	const session = await event.locals.auth.validate();
-	if (session) redirect(302, '/dashboard');
+	if (session) redirect(302, '/app');
 	const form = await superValidate(event, signUpSchema);
 	return {
 		form
@@ -24,7 +24,6 @@ export const load = async (event) => {
 
 export const actions = {
 	default: async (event) => {
-		
 		const form = await superValidate(event, signUpSchema);
 		//console.log(form);
 
@@ -59,10 +58,16 @@ export const actions = {
 			await sendVerificationEmail(form.data.email, token);
 			const session = await auth.createSession({ userId: user.userId, attributes: {} });
 			event.locals.auth.setSession(session);
-			setFlash({ type: 'success', message: 'Account created. Please check your email to verify your account.' }, event);
-			} catch (e) {
+			setFlash(
+				{
+					type: 'success',
+					message: 'Account created. Please check your email to verify your account.'
+				},
+				event
+			);
+		} catch (e) {
 			console.error(e);
-			setFlash({ type: 'error', message: 'Account was not able to be created.'}, event);
+			setFlash({ type: 'error', message: 'Account was not able to be created.' }, event);
 			// email already in use
 			//might be other type of error but this is most common and this is how lucia docs sets the error to duplicate user
 			return setError(form, 'email', 'A user with that email already exists.');

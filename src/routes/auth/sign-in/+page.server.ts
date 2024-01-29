@@ -11,7 +11,7 @@ const signInSchema = userSchema.pick({
 
 export const load = async (event) => {
 	const session = await event.locals.auth.validate();
-	if (session) redirect(302, '/dashboard');
+	if (session) redirect(302, '/app');
 	const form = await superValidate(event, signInSchema);
 	return {
 		form
@@ -46,7 +46,6 @@ export const actions = {
 			//const { fieldErrors: errors } = e.flatten();
 			setFlash({ type: 'error', message: 'The email or password is incorrect.' }, event);
 			return setError(form, 'The email or password is incorrect.');
-			
 		}
 
 		return { form };
