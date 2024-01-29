@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-export const BASE_URL = dev ? 'http://localhost:5173' : 'https://sveltekit-auth-alpha.vercel.app/';
+export const BASE_URL = dev ? 'http://localhost:5173' : 'https://aisolar.pro/';
 export const APP_NAME = 'Steinbot';
 export const CONTACT_EMAIL = 'steinbot@aisolar.pro';
 export const DOMAIN = 'aisolar.pro';
