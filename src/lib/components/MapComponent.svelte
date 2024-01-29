@@ -9,12 +9,15 @@
 
     import { onMount } from 'svelte';
 
+    // Access the API key from the environment variable
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
     onMount(() => {
         if (window.google && window.google.maps) {
             initializeMap();
         } else {
             const script = document.createElement('script');
-            script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDIt2qrYoiqJK-W46RWdydj6x9UAV7BtiM';
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
             script.defer = true;
             script.async = true;
             script.onload = () => {
