@@ -25,7 +25,7 @@ export default async function sendEmail(
 						accessKeyId: AWS_ACCESS_KEY_ID || '',
 						secretAccessKey: AWS_SECRET_ACCESS_KEY || ''
 					}
-			  }
+				}
 			: {})
 	});
 
