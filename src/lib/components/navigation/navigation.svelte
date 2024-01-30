@@ -34,15 +34,12 @@
 <header class="bg-background sticky top-0 z-40 w-full border-b">
 	<div class="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
 		<div class="flex gap-6 md:gap-10">
+			
 			<a class="flex items-center space-x-2" href="/"
-				><Logo size="24"></Logo><span class="inline-block font-bold">{APP_NAME}</span></a
+				>			
+			<span class="inline-block font-bold">{APP_NAME}</span></a
 			>
 			<nav class="flex gap-6">
-				<a
-					class="flex items-center text-sm font-medium text-muted-foreground"
-					href="/"
-					class:active={'/' === currentPage}>Home</a
-				>
 				<Button href="/app">App</Button>
 			</nav>
 		</div>

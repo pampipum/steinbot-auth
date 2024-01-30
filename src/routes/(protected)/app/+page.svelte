@@ -22,6 +22,11 @@
 	let latitude = 46.16631476067755;
 	let longitude = 6.121641804137095;
 	let zoom = 19;
+	export let data;
+
+	// Destructure the data received from load function
+	let { user, messageCount, messageLimitReached } = data;
+	
 
 	onMount(async () => {
 		try {
@@ -32,6 +37,7 @@
 	});
 
 	const handleSubmit = async () => {
+
 		loading = true;
 		chatMessages = [...chatMessages, { role: 'user', content: query }];
 
@@ -46,6 +52,8 @@
 			query = '';
 			scrollToBottom();
 		}
+		
+		
 	};
 
 	function processResponseData(data: any) {
@@ -79,9 +87,9 @@
 	}
 </script>
 
-<div class="flex w-full h-screen px-5 py-5">
+<div class="flex flex-col md:flex-row w-full px-5 py-5">
 	<!-- Chat Column -->
-	<div class="flex flex-col w-1/2 h-full rounded-2xl overflow-hidden mr-2">
+	<div class="flex flex-col w-full md:w-1/2 h-screen rounded-2xl overflow-hidden mr-2">
 		<div class="flex flex-col w-full h-full">
 			<div class="p-4">
 				<h1 class="text-2xl font-bold text-center">Steinbo(T) Solar Expert</h1>
@@ -125,7 +133,7 @@
 	</div>
 
 	<!-- Map Column -->
-	<div class="w-1/2 h-full rounded-2xl overflow-hidden ml-2 relative">
+	<div class="hidden md:block w-full md:w-1/2 h-screen rounded-2xl overflow-hidden ml-2 relative mt-2 md:mt-0">
 		{#if showMap}
 			<OlMap {latitude} {longitude} {zoom} />
 			{#if solarPanelReport}
