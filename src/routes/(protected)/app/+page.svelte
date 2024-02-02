@@ -8,7 +8,7 @@
 	import { initializeThread, postChat } from '$lib/api/api';
 	import { Button } from '$lib/components/ui/button';
 
-	let apiUrl = 'https://backendchat-production.up.railway.app/';
+	let apiUrl = 'https://backendchat-five.vercel.app/';
 	// Code block for local development
 	//let apiUrl = 'http://localhost:8080';
 	let query = '';
@@ -22,10 +22,6 @@
 	let latitude = 46.16631476067755;
 	let longitude = 6.121641804137095;
 	let zoom = 19;
-	export let data;
-
-	// Destructure the data received from load function
-	let { user, messageCount, messageLimitReached } = data;
 	
 
 	onMount(async () => {
@@ -146,4 +142,3 @@
 		{/if}
 	</div>
 </div>
-

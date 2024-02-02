@@ -1,91 +1,30 @@
-import nodemailer from 'nodemailer';
-import * as aws from '@aws-sdk/client-ses';
-import {
-	FROM_EMAIL,
-	AWS_ACCESS_KEY_ID,
-	AWS_SECRET_ACCESS_KEY,
-	AWS_REGION,
-	AWS_API_VERSION
-} from '$env/static/private';
-//import { z } from "zod";
+import { Resend } from 'resend';
+import { FROM_EMAIL, RESEND_API_KEY } from '$env/static/private';
+
 export default async function sendEmail(
 	email: string,
 	subject: string,
 	bodyHtml?: string,
 	bodyText?: string
 ) {
-	const hasAccessKeys = AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY;
-
-	const ses = new aws.SES({
-		apiVersion: AWS_API_VERSION,
-		region: AWS_REGION,
-		...(hasAccessKeys
-			? {
-					credentials: {
-						accessKeyId: AWS_ACCESS_KEY_ID || '',
-						secretAccessKey: AWS_SECRET_ACCESS_KEY || ''
-					}
-				}
-			: {})
-	});
-
-	// create Nodemailer SES transporter
-	const transporter = nodemailer.createTransport({
-		SES: { ses, aws }
-	});
-
-	interface MailConfig {
-		recipient: string;
-		subject: string;
-		htmlMessage: string;
-	}
+	const resend = new Resend(RESEND_API_KEY);
 
 	try {
-		if (!bodyText) {
-			transporter.sendMail(
-				{
-					from: FROM_EMAIL,
-					to: email,
-					subject: subject,
-					html: bodyHtml
-				},
-				(err, info) => {
-					if (err) {
-						throw new Error(`Error sending email: ${JSON.stringify(err)}`);
-					}
-				}
-			);
-		} else if (!bodyHtml) {
-			transporter.sendMail(
-				{
-					from: FROM_EMAIL,
-					to: email,
-					subject: subject,
-					text: bodyText
-				},
-				(err, info) => {
-					if (err) {
-						throw new Error(`Error sending email: ${JSON.stringify(err)}`);
-					}
-				}
-			);
-		} else {
-			transporter.sendMail(
-				{
-					from: FROM_EMAIL,
-					to: email,
-					subject: subject,
-					html: bodyHtml,
-					text: bodyText
-				},
-				(err, info) => {
-					if (err) {
-						throw new Error(`Error sending email: ${JSON.stringify(err)}`);
-					}
-				}
-			);
+		// Choose HTML or text based on what's provided
+		const body = bodyHtml ? { html: bodyHtml } : { text: bodyText };
+
+		const { data, error } = await resend.emails.send({
+			from: FROM_EMAIL,
+			to: [email],
+			subject: subject,
+			...body
+		});
+
+		if (error) {
+			throw new Error(`Error sending email: ${JSON.stringify(error)}`);
 		}
-		console.log('E-mail sent successfully!');
+
+		console.log('E-mail sent successfully!', data);
 		return {
 			statusCode: 200,
 			message: 'E-mail sent successfully.'
