@@ -8,7 +8,7 @@
 	import { initializeThread, postChat } from '$lib/api/api';
 	import { Button } from '$lib/components/ui/button';
 
-	let apiUrl = 'http://app1.aisolar.pro/';
+	let apiUrl = 'https://app1.aisolar.pro/';
 	// Code block for local development
 	//let apiUrl = 'http://localhost:8080';
 	let query = '';
