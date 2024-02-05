@@ -8,7 +8,7 @@
 	import { initializeThread, postChat } from '$lib/api/api';
 	import { Button } from '$lib/components/ui/button';
 
-	let apiUrl = 'https://backendchat-five.vercel.app/';
+	let apiUrl = 'http://app1.aisolar.pro/';
 	// Code block for local development
 	//let apiUrl = 'http://localhost:8080';
 	let query = '';
@@ -21,7 +21,7 @@
 	let showMap = false;
 	let latitude = 46.16631476067755;
 	let longitude = 6.121641804137095;
-	let zoom = 19;
+	let zoom = 18;
 	
 
 	onMount(async () => {
