@@ -4,50 +4,48 @@ import prisma from '$lib/config/prisma';
 import { error, json } from '@sveltejs/kit';
 import type { RequestEvent } from '@sveltejs/kit';
 
-const stripe = new Stripe(VITE_STRIPE_SECRET_KEY, { apiVersion: '2022-11-15' });
-
-
+const stripe = new Stripe(VITE_STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
 
 export async function POST(event: RequestEvent) {
-    const payload = await event.request.text();
-    const sig = event.request.headers.get('stripe-signature');
+	const payload = await event.request.text();
+	const sig = event.request.headers.get('stripe-signature');
 
-    try {
-        const stripeEvent = stripe.webhooks.constructEvent(payload, sig, VITE_STRIPE_ENDPOINT_SECRET);
+	try {
+		const stripeEvent = stripe.webhooks.constructEvent(payload, sig, VITE_STRIPE_ENDPOINT_SECRET);
 
-        // Log all data coming from Stripe
-        console.log('Stripe event:', stripeEvent);
+		// Log all data coming from Stripe
+		console.log('Stripe event:', stripeEvent);
 
-        if (stripeEvent.type === 'checkout.session.completed') {
-            const session = stripeEvent.data.object;
-            
-            // Extract the user ID from the session metadata
-            const userId = session.metadata.userId;
-            console.log('User ID:', userId); // Ensure this matches your session user object structure
+		if (stripeEvent.type === 'checkout.session.completed') {
+			const session = stripeEvent.data.object;
 
-            if (!userId) {
-                console.error('User ID is missing from the request context');
-                throw error(400, 'User ID is missing from the request context.');
-            }
+			// Extract the user ID from the session metadata
+			const userId = session.metadata.userId;
+			console.log('User ID:', userId); // Ensure this matches your session user object structure
 
-            // Example: Calculate new credits based on payment amount. Adjust logic as needed.
-            const creditsToAdd = 10; // Example: 1 credit for every $10 spent.
+			if (!userId) {
+				console.error('User ID is missing from the request context');
+				throw error(400, 'User ID is missing from the request context.');
+			}
 
-            // Update the user's credits directly
-            const updatedUser = await prisma.authUser.update({
-                where: { id: userId },
-                data: { credits: { increment: creditsToAdd } }
-            });
+			// Example: Calculate new credits based on payment amount. Adjust logic as needed.
+			const creditsToAdd = 10; // Example: 1 credit for every $10 spent.
 
-            if (!updatedUser) {
-                console.error('Failed to update user');
-                throw error(500, 'Failed to update user.');
-            }
-        }
+			// Update the user's credits directly
+			const updatedUser = await prisma.authUser.update({
+				where: { id: userId },
+				data: { credits: { increment: creditsToAdd } }
+			});
 
-        return json({ message: 'Success' });
-    } catch (err) {
-        console.error('Error processing Stripe webhook:', err);
-        throw error(500, 'Internal Server Error');
-    }
+			if (!updatedUser) {
+				console.error('Failed to update user');
+				throw error(500, 'Failed to update user.');
+			}
+		}
+
+		return json({ message: 'Success' });
+	} catch (err) {
+		console.error('Error processing Stripe webhook:', err);
+		throw error(500, 'Internal Server Error');
+	}
 }
