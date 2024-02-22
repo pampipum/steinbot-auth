@@ -1,7 +1,17 @@
 <!-- SolarPanelData.svelte -->
-<script>
+<script lang="ts">
     import { Icon, AdjustmentsHorizontal, ArrowTrendingUp, Bolt, ChartBar, Sun } from "svelte-hero-icons";
-    export let solarPanelData;
+    
+    // Define a TypeScript interface for the expected shape of solarPanelData
+    interface SolarPanelData {
+        area_m2: number;
+        electric_yield: number;
+        orientation: number;
+        slope: number;
+    }
+    
+    // Use the SolarPanelData interface for the solarPanelData prop
+    export let solarPanelData: SolarPanelData;
 </script>
 
 <div class="absolute bottom-0 left-0 p-5 max-w-sm">
@@ -26,8 +36,8 @@
                     <Icon src="{AdjustmentsHorizontal}" class="h-6 w-6 text-gray-900"/>
                 </span>
                 <div class="flex flex-col flex-1">
-                    <h3 class="text-sm font-medium">Best Surface Area</h3>
-                    <span class="text-xs leading-none text-gray-400 font-normal">{solarPanelData.best_surface_data.area} m²</span>
+                    <h3 class="text-sm font-medium">Surface Area</h3>
+                    <span class="text-xs leading-none text-gray-400 font-normal">{solarPanelData.area_m2.toFixed(2)} m²</span>
                 </div>
             </div>
 
@@ -39,7 +49,7 @@
                 </span>
                 <div class="flex flex-col flex-1">
                     <h3 class="text-sm font-medium">Orientation</h3>
-                    <span class="text-xs leading-none text-gray-400 font-normal">{solarPanelData.best_surface_data.orientation}</span>
+                    <span class="text-xs leading-none text-gray-400 font-normal">{solarPanelData.orientation.toFixed(0)}°</span>
                 </div>
             </div>
 
@@ -51,19 +61,7 @@
                 </span>
                 <div class="flex flex-col flex-1">
                     <h3 class="text-sm font-medium">Slope</h3>
-                    <span class="text-xs leading-none text-gray-400 font-normal">{solarPanelData.best_surface_data.slope}°</span>
-                </div>
-            </div>
-
-            <!-- Mean Radiation -->
-            <div class="flex items-center space-x-4 p-3.5 rounded-full bg-gray-100">
-                <span class="flex items-center justify-center w-10 h-10 shrink-0 rounded-full bg-white text-gray-900">
-                    <!-- Radiation Icon -->
-                    <Icon src="{Sun}" class="h-6 w-6 text-gray-900"/>
-                </span>
-                <div class="flex flex-col flex-1">
-                    <h3 class="text-sm font-medium">Mean Radiation</h3>
-                    <span class="text-xs leading-none text-gray-400 font-normal">{solarPanelData.best_surface_data.mean_radiation} kWh/m²</span>
+                    <span class="text-xs leading-none text-gray-400 font-normal">{solarPanelData.slope.toFixed(2)}°</span>
                 </div>
             </div>
 
@@ -75,7 +73,7 @@
                 </span>
                 <div class="flex flex-col flex-1">
                     <h3 class="text-sm font-medium">Electric Yield</h3>
-                    <span class="text-xs leading-none text-gray-400 font-normal">{solarPanelData.best_surface_data.electric_yield} kWh</span>
+                    <span class="text-xs leading-none text-gray-400 font-normal">{solarPanelData.electric_yield.toFixed(2)} kWh</span>
                 </div>
             </div>
         </div>

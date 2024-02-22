@@ -18,12 +18,13 @@ model AuthUser {
     role          Role          @default(USER)
     verified      Boolean       @default(false)
     receiveEmail  Boolean       @default(true)
+    credits       Int           @default(5)
+    messageCount  Int           @default(0)
     token         String?       @unique
     createdAt     DateTime      @default(now()) @db.Timestamp(6)
     updatedAt      DateTime     @updatedAt @db.Timestamp(6)
     auth_session  AuthSession[]
     auth_key      AuthKey[]
-    messageCount UserMessageCount?
 
   @@map("auth_user")
 }
@@ -49,16 +50,6 @@ model AuthKey {
   @@map("auth_key")
 }
 
-model UserMessageCount {
-    id          String    @id @default(uuid())
-    userId      String    @unique
-    messageCount Int      @default(0)
-    user        AuthUser  @relation(fields: [userId], references: [id])
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-
-    @@map("user_message_count")
-}
 
 enum Role {
   USER

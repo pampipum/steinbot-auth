@@ -1,11 +1,11 @@
 <!-- MapComponent.svelte -->
-<script>
-    export let latitude;
-    export let longitude;
-    export let zoom;
+<script lang="ts">
+    export let latitude: number;
+    export let longitude: number;
+    export let zoom: number;
 
-    let mapElement;
-    let map;
+    let mapElement: HTMLElement;
+    let map: google.maps.Map;
 
     import { onMount } from 'svelte';
 
@@ -13,33 +13,42 @@
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
     onMount(() => {
-        if (window.google && window.google.maps) {
-            initializeMap();
-        } else {
-            const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
-            script.defer = true;
-            script.async = true;
-            script.onload = () => {
-                initializeMap();
-            };
-            document.head.appendChild(script);
-        }
+        loadGoogleMapsApi().then(() => {
+            initMap();
+        }).catch(error => console.error("Google Maps API failed to load", error));
     });
 
-    function initializeMap() {
-        const mapOptions = {
-            center: new google.maps.LatLng(latitude, longitude),
+    async function loadGoogleMapsApi() {
+        if (window.google && window.google.maps) {
+            return; // The Google Maps API is already loaded
+        }
+
+        await new Promise<void>((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            window.initMap = () => {
+                resolve();
+            };
+            script.onerror = () => reject(new Error("Google Maps API failed to load"));
+            document.head.appendChild(script);
+        });
+    }
+
+    async function initMap() {
+        const { Map, Marker, LatLng } = await google.maps;
+        map = new Map(mapElement, {
+            center: new LatLng(latitude, longitude),
             zoom: zoom,
             mapTypeId: google.maps.MapTypeId.SATELLITE,
             tilt: 45
-        };
-        map = new google.maps.Map(mapElement, mapOptions);
+        });
 
-        new google.maps.Marker({
-            position: new google.maps.LatLng(latitude, longitude),
+        new Marker({
+            position: new LatLng(latitude, longitude),
             map: map,
-            title: 'House'
+            title: 'Location'
         });
     }
 

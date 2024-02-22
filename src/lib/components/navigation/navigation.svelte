@@ -3,13 +3,15 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Command from '$lib/components/ui/command';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import { Sun, Moon, SunMoon, UserRound, LogOut } from 'lucide-svelte';
+	import { Sun, Moon, SunMoon, UserRound, LogOut, Rocket } from 'lucide-svelte';
 	import { setMode, resetMode } from 'mode-watcher';
 	import { APP_NAME } from '$lib/config/constants';
 	import Logo from '$lib/components/logo/logo.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import convertNameToInitials from '$lib/_helpers/convertNameToInitials';
+  	import * as Alert from "$lib/components/ui/alert";
+	import { Badge } from "$lib/components/ui/badge";
 
 	export let user: any;
 	$: currentPage = $page.url.pathname;
@@ -29,6 +31,14 @@
 			initials = convertNameToInitials(user.firstName, user.lastName);
 		}
 	}
+	
+	let cancelled = $page.url.searchParams.has("cancelled");
+  	let success = $page.url.searchParams.has("success");
+
+	let userId = user?.userId; // Safe access using optional chaining // Assuming you have the user ID available here
+	 // This should be dynamically set based on your application's logic
+
+
 </script>
 
 <header class="bg-background sticky top-0 z-40 w-full border-b">
@@ -41,6 +51,12 @@
 			>
 			<nav class="flex gap-6">
 				<Button href="/app">App</Button>
+				<form method="POST" action="/stripe/checkout">
+					{#if userId}
+					  <input type="hidden" name="userId" value={userId} />
+					  <Button variant="outline" type="submit">Buy Credits</Button>
+					{/if}
+				  </form>
 			</nav>
 		</div>
 		<div class="flex flex-1 items-center justify-end space-x-4">
@@ -64,7 +80,7 @@
 							<DropdownMenu.Item on:click={() => setMode('dark')}>Dark</DropdownMenu.Item>
 							<DropdownMenu.Item on:click={() => resetMode()}>System</DropdownMenu.Item>
 						</DropdownMenu.Content>
-					</DropdownMenu.Root>
+					</DropdownMenu.Root>									
 				{:else}
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger asChild let:builder>
@@ -120,14 +136,9 @@
 							</DropdownMenu.Item>
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
+					<Badge>Credits: {user?.credits}</Badge>
 				{/if}
 			</nav>
 		</div>
 	</div>
 </header>
-
-<style>
-	.active {
-		@apply text-primary;
-	}
-</style>

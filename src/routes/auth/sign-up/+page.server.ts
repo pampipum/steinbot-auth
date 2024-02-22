@@ -51,7 +51,8 @@ export const actions = {
 					role: 'USER',
 					verified: false,
 					receiveEmail: true,
-					token: token
+					token: token,
+					credits: 5 // Initialize credits for new user
 				}
 			});
 

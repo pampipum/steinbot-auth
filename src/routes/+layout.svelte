@@ -6,12 +6,16 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { toast } from 'svelte-sonner';
 	import Navigation from '$lib/components/navigation/navigation.svelte';
+	import { userStore } from '$lib/stores/userStore';
 
 	export let data: any;
-	let user: Lucia.UserAttributes;
-	$: user = data.user;
+    let user: Lucia.UserAttributes;
+    $: user = data.user;
+    $: userStore.set(user);
+
 	const flash = getFlash(page);
-	//$: console.log('+layout.svelte root flash: ' + JSON.stringify($flash));
+
+
 	$: if ($flash) {
 		switch ($flash.type) {
 			case 'success':

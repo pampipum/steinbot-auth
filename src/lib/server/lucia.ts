@@ -31,7 +31,9 @@ export const auth = lucia({
 			role: data.role,
 			verified: data.verified,
 			receiveEmail: data.receiveEmail,
-			token: data.token
+			token: data.token,
+			credits: data.credits,
+			messageCount: data.messageCount
 		};
 	}
 });
