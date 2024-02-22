@@ -3,7 +3,7 @@ import { error, redirect, type Redirect } from '@sveltejs/kit';
 import Stripe from 'stripe';
 import { VITE_STRIPE_SECRET_KEY } from '$env/static/private';
 
-const stripe = new Stripe(VITE_STRIPE_SECRET_KEY, { apiVersion: '2022-11-15' });
+const stripe = new Stripe(VITE_STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
 
 export const actions: Actions = {
 	default: async ({ request }) => {
